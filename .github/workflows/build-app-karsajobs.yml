@@ -1,0 +1,23 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: build-app-karsajobs
+
+on:
+  push:
+    branches: [ "karsajobs" ]
+  pull_request:
+    branches: [ "karsajobs" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build & Push Image
+      run: |
+        echo "${{ secrets.PASSPACKAGE }}" | docker login ghcr.io -u farahazhari --password-stdin
+        docker build -t ghcr.io/farahazhari/ci-karsajobs:latest .
+        docker push ghcr.io/farahazhari/ci-karsajobs:latest
